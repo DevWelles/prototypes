@@ -1,5 +1,7 @@
 //napisano po staroj sintaksi pomoću funkcionalnih prototyppova
 
+//poveži sve metode (prototypes) od klasa koje nasljeđuju sa npr. Student.prototoype = new Osoba(); i to odraditi prvo tj prije nego sto overridamo sa Student.protype.izvješće = ... vlastite metode određee klase za izvješća
+
 //klasa Osoba
 function Osoba(ime="",prezime="") {
   this.ime = ime;
@@ -11,10 +13,11 @@ Osoba.prototype.izvjesce = function(){
 
 //Klasa Student
 function Student(ime, prezime){
-  Osoba.call(this, ime, prezime)
+  Osoba.call(this, ime, prezime) //preko ovoga nasljeđuje samo propertye odnosno construktorsku funkciju, jer u construktrosku funkciju smijemo pisati samo propertyee
   this.upisaniKolegiji = [];
   this.polozeniKolegiji = [];
 };
+Student.prototoype = new Osoba(); //ovako nasljeđuje sve metode iz Osoba (u ovom slučaju samo izvješće). prototype je u biti objekt preko kojeg se nasljeđuju metode
 Student.prototype.prijaviIspit = function(kolegij){
   kolegij.listaStudenata.push(this.ime + this.prezime);
 };
@@ -36,7 +39,7 @@ Student.prototype.ispisPolozenihKolegija = function(){
     ispis =  `polozio sam${ispis}`
   }return ispis
 };
-Student.prototype.izvjesce = function() {
+Student.prototype.izvjesce = function() { //tu overwriteamo metodu nasljeđenu od osoba i sad student ima svoje izvješće jer će prvo njega dohvatiti, a onda njegovog pretka samo u slučaju da nenađe metodu u svojoj klasi
   return `Ja sam student ${this.ime} ${this.prezime}. ${this.ispisUpisanihKolegija()} i
   ${this.ispisPolozenihKolegija()}.`
 };
@@ -54,6 +57,7 @@ function Profesor (ime, prezime) {
   Osoba.call(this, ime, prezime);
   this.listaKolegija = [];
 };
+Profesor.prototype = new Osoba();
 Profesor.prototype.ocijeniIspit = function(student,kolegij) {
   return `Student ${student.ime} ${student.prezime} je ${kolegij.prolaz(student)} iz kolegija ${kolegij.imeKolegija}.`
 };
@@ -107,6 +111,7 @@ const javaScript = new Kolegij("JS", ivan);
 const css = new Kolegij("CSS", antun)
 
 
+
 sime.dodajKolegij(react);
 sime.dodajKolegij(javaScript);
 zvone.dodajKolegij(react);
@@ -133,6 +138,7 @@ console.log(zvone.izvjesce());
 
 console.log(antun.ocijeniIspit(zvone,css));
 console.log(antun.ocijeniIspit(sime,css))
+
 
 
 
